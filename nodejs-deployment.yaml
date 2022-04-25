@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nodeapp
+  name: nodeapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodeapp
+  template:
+    metadata:
+      labels:
+        app: nodeapp
+      name: nodeapp
+    spec:
+      initContainers:
+        - name: init-db
+          image: busybox:1.31
+          command: ['sh', '-c', 'echo -e "Checking for the availability of mongodb"; while ! nc -z mongodbhostsvc 27017; do sleep 1; printf "-"; done; echo -e "  >> Mongodb is up";']
+      containers:
+      - image: sagarkaushal1/nodeapp-sagar:{{BUILD_NUMBER}}
+        imagePullPolicy: IfNotPresent
+        name: nodeapp
+        ports:
+        - containerPort: 4000
+          protocol: TCP
