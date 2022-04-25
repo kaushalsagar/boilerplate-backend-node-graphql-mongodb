@@ -93,7 +93,7 @@ pipeline {
       steps
 	{
 		
-         echo 'Ingress Creationg'
+         echo 'Ingress Creation'
          sh 'kubectl apply -f ingress.yaml'	 
 	}
   }
